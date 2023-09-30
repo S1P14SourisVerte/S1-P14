@@ -22,4 +22,4 @@ jobs:
       # GitHub username to use for automated commits (should be a real GitHub user)
       bot-name: cloudpossebot
     secrets:
-      workflow-token: ${{ secrets.TOKEN_WITH_WORKFLOWS_PERMISSION }}
+      workflow-token: ${{ secrets.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 }}
