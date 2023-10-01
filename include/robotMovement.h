@@ -1,5 +1,7 @@
 #include <LibRobus.h>
 
+#include "math.h"
+
 #ifdef ROBOT_B
     #define CORRECTION_REAR_WHEEL_RIGHT_TURN_DEG 1.5f
     #define CORRECTION_REAR_WHEEL_LEFT_TURN_DEG 1.75f
@@ -29,10 +31,12 @@ typedef enum {
 } turnDirection;
 
 void move(float motorSpeed, int distance_cm);
+void smoothMove(float motorSpeed, int distance_cm);
 void stop();
 void sharpTurn(float motorSpeed, float degree, turnDirection direction);
 void smoothTurn(float motorSpeed, float degree, turnDirection direction);
 // void correctDirection(float motorSpeed);
-void correctDirection(float* motorSpeed);
+// void correctDirection(float* motorSpeed);
+void correctDirection(float motorSpeed, float distance_pulses);
 void correctTurnDirection(float motorSpeed);
 void resetEncoders();

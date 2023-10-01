@@ -2,10 +2,10 @@
 
 void move(float motorSpeed, int distance_cm)
 {
-  resetEncoders();
-  MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed);
+  // resetEncoders();
+  MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * 0.9);
   MOTOR_SetSpeed(RIGHT_MOTOR, motorSpeed);
-  delay(50);
+  // delay(50);
 
   float distance_wheelCycles = (float)distance_cm / WHEEL_CIRCONFERENCE_CM;
   // float accelerationSpeed = 0.15f;
@@ -16,9 +16,56 @@ void move(float motorSpeed, int distance_cm)
     // {
     //   accelerationSpeed += MOTOR_BASE_SPEED / 20;
     // }
-    correctDirection(&motorSpeed);
+    // correctDirection(&motorSpeed);
+    correctDirection(motorSpeed, PULSES_PER_WHEEL_CYCLE * distance_wheelCycles);
   }
   //stop();
+}
+
+void smoothMove(float motorSpeed, int distance_cm)
+{
+  resetEncoders();
+
+  // float gearChangeDelay_ms = 20;
+  float x = -5;
+  // float startSpeed = motorSpeed / 10;
+
+  // MOTOR_SetSpeed(LEFT_MOTOR, startSpeed * 0.9);
+  // MOTOR_SetSpeed(RIGHT_MOTOR, startSpeed);
+
+  // float currentSpeed = startSpeed;
+  float currentSpeed = 0;
+  float distance_wheelCycles = (float)distance_cm / WHEEL_CIRCONFERENCE_CM;
+
+  while ((float)ENCODER_Read(LEFT_MOTOR) <= PULSES_PER_WHEEL_CYCLE * distance_wheelCycles)
+  {
+    // if (accelerationSpeed < motorSpeed)
+    // {
+    //   accelerationSpeed += MOTOR_BASE_SPEED / 20;
+    // }
+    // correctDirection(&motorSpeed);
+
+    if (currentSpeed < motorSpeed)
+    {
+      currentSpeed = motorSpeed * exp(x);
+      // Serial.print("x: ");
+      // Serial.print(x);
+      // Serial.print(", speed: ");
+      // Serial.println(currentSpeed);
+      x += 0.1;
+      // currentSpeed += 0.01;
+      MOTOR_SetSpeed(LEFT_MOTOR, currentSpeed);
+      MOTOR_SetSpeed(RIGHT_MOTOR, currentSpeed);
+      // delay(gearChangeDelay_ms);
+    }
+    else if (currentSpeed > motorSpeed)
+    {
+      currentSpeed = motorSpeed;
+      MOTOR_SetSpeed(LEFT_MOTOR, currentSpeed * 0.9);
+      MOTOR_SetSpeed(RIGHT_MOTOR, currentSpeed);
+    }
+    correctDirection(currentSpeed, PULSES_PER_WHEEL_CYCLE * distance_wheelCycles);
+  }
 }
 
 void stop()
@@ -93,25 +140,27 @@ void smoothTurn(float motorSpeed, float degree, turnDirection direction)
   }
 }*/
 
-void correctDirection(float *motorSpeed)
+void correctDirection_t1(float *motorSpeed)
 {
   // 3200/3100 = 1 - 1.05 = -0.05
   // 3100/3200 = 1 - 0.95 = 0.05
 
-  Serial.print("1: ");
+  Serial.print("LP: ");
   Serial.print(ENCODER_Read(LEFT_MOTOR));
-  Serial.print(", 2: ");
+  Serial.print(", RP: ");
   Serial.print(ENCODER_Read(RIGHT_MOTOR));
+
+  if (ENCODER_Read(LEFT_MOTOR) == 0 && ENCODER_Read(RIGHT_MOTOR) == 0)
+  {
+    Serial.println("");
+    return;
+  }
 
   // float pulsesRatio = 1.0f - ((float)ENCODER_Read(LEFT_MOTOR) / (float)ENCODER_Read(RIGHT_MOTOR));
   float pulsesRatio = ((float)ENCODER_Read(LEFT_MOTOR) / (float)ENCODER_Read(RIGHT_MOTOR));
   // *motorSpeed = *motorSpeed * (1.0 + pulsesRatio);
   // *motorSpeed = *motorSpeed * pulsesRatio;
   // *motorSpeed = pulsesRatio >= 1 ? *motorSpeed / pulsesRatio : *motorSpeed * pulsesRatio;
-  if (ENCODER_Read(LEFT_MOTOR) == 0 && ENCODER_Read(RIGHT_MOTOR) == 0)
-  {
-    return;
-  }
   *motorSpeed = *motorSpeed / pulsesRatio;
 
   Serial.print(", ratio: ");
@@ -120,6 +169,59 @@ void correctDirection(float *motorSpeed)
   Serial.println(*motorSpeed);
 
   MOTOR_SetSpeed(LEFT_MOTOR, *motorSpeed);
+}
+
+void correctDirection(float motorSpeed, float distance_pulses)
+{
+  // Serial.print("LP: ");
+  // Serial.print(ENCODER_Read(LEFT_MOTOR));
+  // Serial.print(", RP: ");
+  // Serial.print(ENCODER_Read(RIGHT_MOTOR));
+
+  if (ENCODER_Read(LEFT_MOTOR) == 0 && ENCODER_Read(RIGHT_MOTOR) == 0)
+  {
+    // Serial.println("");
+    return;
+  }
+
+  if (motorSpeed < 0.1)
+  {
+    return;
+  }
+
+  float expectedPulses = (float)ENCODER_Read(LEFT_MOTOR);
+  float currentPulses = (float)ENCODER_Read(RIGHT_MOTOR);
+  Serial.print("expec: ");
+  Serial.print(expectedPulses);
+  Serial.print(", cur: ");
+  Serial.print(currentPulses);
+
+  float pulsesDifference = expectedPulses - currentPulses;
+  Serial.print(", diff: ");
+  Serial.print(pulsesDifference);
+  // Marche pour le left avec 0.0005
+  float newSpeedLeft = motorSpeed - (0.0005 * pulsesDifference);
+  float newSpeedRight = motorSpeed + (0.0001 * pulsesDifference);
+  Serial.print(", nspeedL: ");
+  Serial.print(newSpeedLeft);
+  Serial.print(", nspeedR: ");
+  Serial.println(newSpeedRight);
+
+  MOTOR_SetSpeed(LEFT_MOTOR, newSpeedLeft);
+  // MOTOR_SetSpeed(RIGHT_MOTOR, newSpeedRight);
+
+  // float pulsesRatio = ((float)ENCODER_Read(LEFT_MOTOR) / (float)ENCODER_Read(RIGHT_MOTOR));
+  // *motorSpeed = *motorSpeed * (1.0 + pulsesRatio);
+  // *motorSpeed = *motorSpeed * pulsesRatio;
+  // *motorSpeed = pulsesRatio >= 1 ? *motorSpeed / pulsesRatio : *motorSpeed * pulsesRatio;
+  // motorSpeed = motorSpeed / pulsesRatio;
+
+  // Serial.print(", ratio: ");
+  // Serial.print(pulsesRatio);
+  // Serial.print(", power: ");
+  // Serial.println(newSpeed);
+
+  // MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed);
 }
 
 // void correctDirection(float motorSpeed)
