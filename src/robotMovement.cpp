@@ -61,3 +61,42 @@ void resetEncoders()
   ENCODER_ReadReset(LEFT_MOTOR);
   ENCODER_ReadReset(RIGHT_MOTOR);
 }
+
+void turn(float speed, float angle, int direction) {
+
+  resetEncoders();
+
+  float ratio_p_a;
+  float ratio_a_c;
+  float circonferenceTrajectory = 47;
+  float circonferenceWheel = 9.4247;
+  float pulses;
+  float pulseEncoder1;
+  float pulseEncoder2;
+
+  ratio_a_c = (angle / 360) * circonferenceTrajectory;
+  ratio_p_a = (ratio_a_c / circonferenceWheel);
+  pulses = (ratio_p_a * 3200);
+
+  // Encoder variable
+  pulseEncoder1 = ENCODER_Read(0);
+  pulseEncoder2 = ENCODER_Read(1);
+
+  if (direction == 0) {
+    while ((pulses >= pulseEncoder1) && (pulses >= pulseEncoder2)) {
+      MOTOR_SetSpeed(0, (0.9721 * speed));
+      MOTOR_SetSpeed(1, -speed);
+      pulseEncoder1 = ENCODER_Read(0);
+      pulseEncoder2 = ENCODER_Read(1);
+    }
+  } else
+    while ((pulses >= pulseEncoder1) && (pulses >= pulseEncoder2)) {
+      MOTOR_SetSpeed(0, (-0.988 * speed));
+      MOTOR_SetSpeed(1, speed);
+      pulseEncoder1 = ENCODER_Read(0);
+      pulseEncoder2 = ENCODER_Read(1);
+    }
+
+  MOTOR_SetSpeed(0, 0);
+  MOTOR_SetSpeed(1, 0);
+}

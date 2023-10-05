@@ -134,7 +134,7 @@ int FindPath() {
   Forward(2);
 }
 
-void setup() {
+void setupPathfinder() {
   BoardInit();
   MatriceInit();
 
@@ -144,7 +144,7 @@ void setup() {
   robus.posY = 9;
 }
 
-void loop() {
+void loopPathfinder() {
   if (1/*The buzzer has been activated*/)
     signal = 1;
 
