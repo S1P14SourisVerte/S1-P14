@@ -1,6 +1,5 @@
 #include <LibRobus.h>
 
-#include "avr8-stub.h"
 #include "robotMovement.h"
 
 void buzz();
@@ -9,14 +8,14 @@ void setup()
 {
   BoardInit();
 
-  move(0.4, 150);
+  move(0.3, 500);
   stop();
 
 }
 
 void loop()
 {
-  if (ROBUS_IsBumper(3)) 
+  if (ROBUS_IsBumper(3))
   {
     move(0.2, 500);
     stop();

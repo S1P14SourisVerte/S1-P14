@@ -5,7 +5,7 @@ void move(float motorSpeed, int distance_cm)
   resetEncoders();
   MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * 0.9);
   MOTOR_SetSpeed(RIGHT_MOTOR, motorSpeed);
-  
+  // sigmoid logistic
   float distance_wheelCycles = (float)distance_cm / WHEEL_CIRCONFERENCE_CM;
 
   while ((float)ENCODER_Read(LEFT_MOTOR) <= PULSES_PER_WHEEL_CYCLE * distance_wheelCycles)
@@ -37,8 +37,11 @@ void correctDirection(float motorSpeed, float distance_pulses)
   float currentPulses = (float)ENCODER_Read(RIGHT_MOTOR);
 
   float pulsesDifference = expectedPulses - currentPulses;
+  if (pulsesDifference == 0)
+  {
+    return;
+  }
   float newSpeedLeft = motorSpeed - (0.0005 * pulsesDifference);
-  float newSpeedRight = motorSpeed + (0.0001 * pulsesDifference);
   #ifdef DEBUG
     Serial.print("expec: ");
     Serial.print(expectedPulses);
@@ -47,9 +50,7 @@ void correctDirection(float motorSpeed, float distance_pulses)
     Serial.print(", diff: ");
     Serial.print(pulsesDifference);
     Serial.print(", nspeedL: ");
-    Serial.print(newSpeedLeft);
-    Serial.print(", nspeedR: ");
-    Serial.println(newSpeedRight);
+    Serial.println(newSpeedLeft);
   #endif
 
   MOTOR_SetSpeed(LEFT_MOTOR, newSpeedLeft);

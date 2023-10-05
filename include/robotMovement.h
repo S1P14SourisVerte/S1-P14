@@ -31,10 +31,6 @@ typedef enum {
 } turnDirection;
 
 void move(float motorSpeed, int distance_cm);
-void smoothMove(float motorSpeed, int distance_cm);
 void stop();
-void sharpTurn(float motorSpeed, float degree, turnDirection direction);
-void smoothTurn(float motorSpeed, float degree, turnDirection direction);
 void correctDirection(float motorSpeed, float distance_pulses);
-void correctTurnDirection(float motorSpeed);
 void resetEncoders();
