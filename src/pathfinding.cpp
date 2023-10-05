@@ -31,7 +31,11 @@ void Forward(int distance) {
   else if (robus.facing == 'w')
     robus.posX -= distance;
   else
+<<<<<<< Updated upstream
     robus.posY += distance);
+=======
+    robus.posY += distance;
+>>>>>>> Stashed changes
 
   // code to make Robus go forward
 }
@@ -151,7 +155,11 @@ void loop() {
     if (robus.posY == 0)
       Beginning();
     else if (robus.posY == 9)
+<<<<<<< Updated upstream
       Stop();
+=======
+      //Stop();
+>>>>>>> Stashed changes
     else
       FindPath();
 }
