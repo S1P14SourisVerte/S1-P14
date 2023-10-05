@@ -1,11 +1,12 @@
 #include <Arduino.h>
 #include <LibRobus.h>
 
+#include "robotMovement.h"
+
 #define ROW 10
 #define COLUMN 3
 #define BOX_DIMENSION 50
 
-int boxPossibility[ROW][COLUMN];
 int signal;
 
 struct Status {
@@ -13,17 +14,6 @@ struct Status {
   int posX;
   int posY;
 } robus;
-
-void MatriceInit() {
-
-  //Filling the matrice with the possible route
-  for (int i = 0; i < ROW; i++)
-    for (int j = 0; j < COLUMN; j++)
-      boxPossibility[i][j] = 1;
-
-  /***					Forbidden boxes						***/
-  //boxPossibility[][] = 0; If there's any
-}
 
 void Forward(int distance) {
   if (robus.facing == 'e')
@@ -34,44 +24,6 @@ void Forward(int distance) {
     robus.posY += distance;
 
   // code to make Robus go forward
-}
-
-void Rotation(float speed, float angle, int direction) {
-  float ratio_p_a;
-  float ratio_a_c;
-  float circonferenceTrajectory = 47;
-  float circonferenceWheel = 9.4247;
-  float pulses;
-  float pulseEncoder1;
-  float pulseEncoder2;
-
-  ratio_a_c = (angle / 360) * circonferenceTrajectory;
-  ratio_p_a = (ratio_a_c / circonferenceWheel);
-  pulses = (ratio_p_a * 3200);
-
-  // Encoder variable
-  pulseEncoder1 = ENCODER_Read(0);
-  pulseEncoder2 = ENCODER_Read(1);
-
-  if (direction == 0) {
-    while ((pulses >= pulseEncoder1) && (pulses >= pulseEncoder2)) {
-      MOTOR_SetSpeed(0, (0.9721 * speed));
-      MOTOR_SetSpeed(1, -speed);
-      pulseEncoder1 = ENCODER_Read(0);
-      pulseEncoder2 = ENCODER_Read(1);
-    }
-  } else
-    while ((pulses >= pulseEncoder1) && (pulses >= pulseEncoder2)) {
-      MOTOR_SetSpeed(0, (-0.988 * speed));
-      MOTOR_SetSpeed(1, speed);
-      pulseEncoder1 = ENCODER_Read(0);
-      pulseEncoder2 = ENCODER_Read(1);
-    }
-
-  MOTOR_SetSpeed(0, 0);
-  MOTOR_SetSpeed(1, 0);
-  ENCODER_Reset(0);
-  ENCODER_Reset(1);
 }
 
 void RotateLeft(float angle) {
@@ -148,11 +100,14 @@ void loopPathfinder() {
   if (1/*The buzzer has been activated*/)
     signal = 1;
 
-  if (signal == 1)
-    if (robus.posY == 0)
-      Beginning();
+  
+  if (signal == 1){
+    
+
+
+  }
+    
     else if (robus.posY == 9)
-      int allo = 1; //Stop();
-    else
-      FindPath();
+      signal = 0;
+   
 }
