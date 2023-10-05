@@ -1,12 +1,12 @@
 #include <Arduino.h>
-#include <librobus.h>
+#include <LibRobus.h>
 
 #define ROW 10
 #define COLUMN 3
 #define BOX_DIMENSION 50
 
 int boxPossibility[ROW][COLUMN];
-bool signal;
+int signal;
 
 struct Status {
   char facing;  // Robus can face north, east and west
@@ -74,49 +74,48 @@ void Rotation(float speed, float angle, int direction) {
   ENCODER_Reset(1);
 }
 
-void RotateLeft() {
+void RotateLeft(float angle) {
   if (robus.facing == 'n')
     robus.facing = 'w';
   else
     robus.facing = 'n';
 
-  Rotation(0.2, 90, 1)
+  Rotation(0.2, angle, 1)
 }
 
-void RotateRight() {
+void RotateRight(float angle) {
   if (robus.facing == 'n')
     robus.facing = 'e';
   else
     robus.facing = 'n';
 
-  Rotation(0.2, 90, 0)
+  Rotation(0.2, angle, 0)
 }
 
 void Beginning() {
   if (/*IR Sensor sends positive output*/) {
-    // Goes left to check if it's the right path
-    RotateLeft();
-    Forward(1);
-    RotateRight();
-
-    if (/*IR Sensor sends positive output*/) {
-      // Goes right to check if it's the right path
-      RotateRight();
-      Forward(2);
-      RotateLeft();
+    
+    RotateLeft(90);
+    if (/*IR Sensor sends positive output*/){
+       RotateRight(180);
+       Forward(2);
+       RotateLeft(90);
+    }else{
+        Forward(1);
+        RotateRight(90);
     }
   }
   Forward(2);
 }
 
 int CheckSurrounding() {
-  for (int i = -1; i < 2; i++)
-    if (!boxPossibility[robus.posY][robus.posX + i])
+  for (int i = 0; i < COLUMN; i++)
+    if (boxPossibility[robus.posY][i] == robus.posX)
       return i;
 }
 
 int FindPath() {
-  if ((robus.posY) % 2 == 1)
+  if ((robus.posY) % 2 == 0)
     if (/*IR Sensor sends positive output*/)
       switch (CheckSurounding()) {
         case -1:  //Tape on the right
@@ -138,7 +137,7 @@ void setup() {
   BoardInit();
   MatriceInit();
 
-  signal = false;
+  signal = 0;
   robus.facing = 'n';
   robus.posX = 1;
   robus.posY = 9;
@@ -146,12 +145,12 @@ void setup() {
 
 void loop() {
   if (/*The buzzer has been activated*/)
-    signal = true;
+    signal = 1;
 
-  if (signal == true)
-    if (robus.posY == 9)
+  if (signal == 1)
+    if (robus.posY == 0)
       Beginning();
-    else if (robus.posY == 0)
+    else if (robus.posY == 9)
       Stop();
     else
       FindPath();
