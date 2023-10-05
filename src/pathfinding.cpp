@@ -19,7 +19,7 @@ void MatriceInit() {
   //Filling the matrice with the possible route
   for (int i = 0; i < ROW; i++)
     for (int j = 0; j < COLUMN; j++)
-      boxPossibility[i][j] = 1
+      boxPossibility[i][j] = 1;
 
   /***					Forbidden boxes						***/
   //boxPossibility[][] = 0; If there's any
@@ -31,7 +31,7 @@ void Forward(int distance) {
   else if (robus.facing == 'w')
     robus.posX -= distance;
   else
-    robus.posY += distance);
+    robus.posY += distance;
 
   // code to make Robus go forward
 }
@@ -80,7 +80,7 @@ void RotateLeft(float angle) {
   else
     robus.facing = 'n';
 
-  Rotation(0.2, angle, 1)
+  Rotation(0.2, angle, 1);
 }
 
 void RotateRight(float angle) {
@@ -89,14 +89,14 @@ void RotateRight(float angle) {
   else
     robus.facing = 'n';
 
-  Rotation(0.2, angle, 0)
+  Rotation(0.2, angle, 0);
 }
 
 void Beginning() {
-  if (/*IR Sensor sends positive output*/) {
+  if (1/*IR Sensor sends positive output*/) {
     
     RotateLeft(90);
-    if (/*IR Sensor sends positive output*/){
+    if (1/*IR Sensor sends positive output*/){
        RotateRight(180);
        Forward(2);
        RotateLeft(90);
@@ -116,8 +116,8 @@ int CheckSurrounding() {
 
 int FindPath() {
   if ((robus.posY) % 2 == 0)
-    if (/*IR Sensor sends positive output*/)
-      switch (CheckSurounding()) {
+    if (1/*IR Sensor sends positive output*/) {
+      switch (1/*CheckSurounding()*/) {
         case -1:  //Tape on the right
 
           break;
@@ -130,6 +130,7 @@ int FindPath() {
         default:
           break;
       }
+    }
   Forward(2);
 }
 
@@ -144,14 +145,14 @@ void setup() {
 }
 
 void loop() {
-  if (/*The buzzer has been activated*/)
+  if (1/*The buzzer has been activated*/)
     signal = 1;
 
   if (signal == 1)
     if (robus.posY == 0)
       Beginning();
     else if (robus.posY == 9)
-      Stop();
+      int allo = 1; //Stop();
     else
       FindPath();
 }
