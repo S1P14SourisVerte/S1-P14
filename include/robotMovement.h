@@ -30,7 +30,16 @@ typedef enum {
     LeftTurn = -1 
 } turnDirection;
 
+struct Status {
+  char facing;  // Robus can face north, south, east and west
+  int posX; // Between 0 and 2
+  int posY; // Between 0 and 9
+} robus;
+
 void move(float motorSpeed, int distance_cm);
 void stop();
 void correctDirection(float motorSpeed, float distance_pulses);
 void resetEncoders();
+void turn(float speed, float angle, int direction);
+void ChangeStatus(int distance);
+void ChangeStatus(float angle, int direction);

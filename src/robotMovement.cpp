@@ -13,6 +13,8 @@ void move(float motorSpeed, int distance_cm)
     correctDirection(motorSpeed, PULSES_PER_WHEEL_CYCLE * distance_wheelCycles);
   }
   stop();
+  
+  ChangeStatus(distance_cm);
 }
 
 void stop()
@@ -99,4 +101,62 @@ void turn(float speed, float angle, int direction) {
 
   MOTOR_SetSpeed(0, 0);
   MOTOR_SetSpeed(1, 0);
+
+  ChangeStatus(angle, direction); // 0: Right   1:Left
+}
+
+void ChangeStatus(int distance) {
+  switch (robus.facing) {
+    case 'e':
+      robus.posX += distance;
+        break;
+    case 'w':
+      robus.posX -= distance;
+      break;
+    case 'n':
+      robus.posY += distance;
+      break;
+    case 's':
+       robus.posY -= distance;
+       break;
+    default:
+      break;
+  }
+}
+
+void ChangeStatus(float angle, int direction) {
+  if(angle == 90)
+    switch(robus.facing) {
+      case 'n':
+        robus.facing = (direction == 1) ? 'w' : 'e';
+        break;
+      case 'w':
+        robus.facing = (direction == 1) ? 's' : 'n';
+       break;
+      case 'e':
+       robus.facing = (direction == 1) ? 'n' : 's';
+        break;
+      case 's':
+       robus.facing = (direction == 1) ? 'e' : 'w';
+         break;
+      default:
+         break;
+    }
+  else
+    switch(robus.facing) {
+      case 'n':
+        robus.facing = 's';
+        break;
+      case 'w':
+        robus.facing = 'e';
+        break;
+      case 'e':
+        robus.facing = 'w';
+        break;
+      case 's':
+        robus.facing = 'n';
+        break;
+      default:
+        break;
+    }
 }
