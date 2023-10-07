@@ -2,6 +2,7 @@
 #include <LibRobus.h>
 
 #include "robotMovement.h"
+#include "detection.h"
 
 #define ROW 10
 #define COLUMN 3
@@ -9,39 +10,16 @@
 
 int signal;
 
-struct Status {
-  char facing;  // Robus can face north, east and west
-  int posX;
-  int posY;
-} robus;
-
 void Forward(int distance) {
-  if (robus.facing == 'e')
-    robus.posX += distance;
-  else if (robus.facing == 'w')
-    robus.posX -= distance;
-  else
-    robus.posY += distance;
-
-  // code to make Robus go forward
+  move(0.2, 50);
 }
 
 void RotateLeft(float angle) {
-  if (robus.facing == 'n')
-    robus.facing = 'w';
-  else
-    robus.facing = 'n';
-
-  Rotation(0.2, angle, 1);
+  turn(0.2, angle, 1);
 }
 
 void RotateRight(float angle) {
-  if (robus.facing == 'n')
-    robus.facing = 'e';
-  else
-    robus.facing = 'n';
-
-  Rotation(0.2, angle, 0);
+  turn(0.2, angle, 0);
 }
 
 void Beginning() {
@@ -62,7 +40,7 @@ void Beginning() {
 
 int CheckSurrounding() {
   for (int i = 0; i < COLUMN; i++)
-    if (boxPossibility[robus.posY][i] == robus.posX)
+    if (i == robus.posX)
       return i;
 }
 
@@ -88,7 +66,6 @@ int FindPath() {
 
 void setupPathfinder() {
   BoardInit();
-  MatriceInit();
 
   signal = 0;
   robus.facing = 'n';
@@ -100,7 +77,6 @@ void loopPathfinder() {
   if (1/*The buzzer has been activated*/)
     signal = 1;
 
-  
   if (signal == 1){
     
 
