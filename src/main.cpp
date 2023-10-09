@@ -19,14 +19,14 @@ void setup() {
   BoardInit();
   RobotMouvementInit();
   DetectionInit();
-  signal = OFF;
+  signal = ON;
 }
 
 void loop() {
   if (detect_whistle() == 1)
     signal = ON;
 
-  if (robus.posY == END_ROW)
+  if (rob.posY == END_ROW)
     signal = OFF;
 
   if (signal == ON){

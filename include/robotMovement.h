@@ -34,7 +34,7 @@ struct Status {
   char facing;  // Robus can face north, south, east and west
   int posX; // Between 0 and 2
   int posY; // Between 0 and 9
-} robus;
+} rob;
 
 void move(float motorSpeed, int distance_cm);
 void stop();

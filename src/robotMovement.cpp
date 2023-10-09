@@ -44,7 +44,7 @@ void correctDirection(float motorSpeed, float distance_pulses)
     return;
   }
   float newSpeedLeft = motorSpeed - (0.0005 * pulsesDifference);
-  #ifdef DEBUG
+  /*#ifdef DEBUG
     Serial.print("expec: ");
     Serial.print(expectedPulses);
     Serial.print(", cur: ");
@@ -53,7 +53,7 @@ void correctDirection(float motorSpeed, float distance_pulses)
     Serial.print(pulsesDifference);
     Serial.print(", nspeedL: ");
     Serial.println(newSpeedLeft);
-  #endif
+  #endif*/
 
   MOTOR_SetSpeed(LEFT_MOTOR, newSpeedLeft);
 }
@@ -70,7 +70,7 @@ void turn(float speed, float angle, int direction) {
 
   float ratio_p_a;
   float ratio_a_c;
-  float circonferenceTrajectory = 47;
+  float circonferenceTrajectory = 23.88;
   float circonferenceWheel = 9.4247;
   float pulses;
   float pulseEncoder1;
@@ -106,19 +106,19 @@ void turn(float speed, float angle, int direction) {
 }
 
 void ChangeStatus(int distance) {
-  switch (robus.facing) {
+  switch (rob.facing) {
     case 'e':
-      robus.posX += distance;
+      rob.posX += distance;
         break;
     case 'w':
-      robus.posX -= distance;
+      rob.posX -= distance;
       break;
     case 'n':
-      robus.posY += distance;
+      rob.posY += distance;
       break;
     case 's':
-       robus.posY -= distance;
-       break;
+      rob.posY -= distance;
+      break;
     default:
       break;
   }
@@ -126,35 +126,35 @@ void ChangeStatus(int distance) {
 
 void ChangeStatus(float angle, int direction) {
   if(angle == 90)
-    switch(robus.facing) {
+    switch(rob.facing) {
       case 'n':
-        robus.facing = (direction == 1) ? 'w' : 'e';
+        rob.facing = (direction == 1) ? 'w' : 'e';
         break;
       case 'w':
-        robus.facing = (direction == 1) ? 's' : 'n';
+        rob.facing = (direction == 1) ? 's' : 'n';
        break;
       case 'e':
-       robus.facing = (direction == 1) ? 'n' : 's';
+       rob.facing = (direction == 1) ? 'n' : 's';
         break;
       case 's':
-       robus.facing = (direction == 1) ? 'e' : 'w';
+       rob.facing = (direction == 1) ? 'e' : 'w';
          break;
       default:
          break;
     }
   else
-    switch(robus.facing) {
+    switch(rob.facing) {
       case 'n':
-        robus.facing = 's';
+        rob.facing = 's';
         break;
       case 'w':
-        robus.facing = 'e';
+        rob.facing = 'e';
         break;
       case 'e':
-        robus.facing = 'w';
+        rob.facing = 'w';
         break;
       case 's':
-        robus.facing = 'n';
+        rob.facing = 'n';
         break;
       default:
         break;
@@ -162,7 +162,7 @@ void ChangeStatus(float angle, int direction) {
 }
 
 void RobotMouvementInit(void) {
-  robus.facing = 'n';
-  robus.posX = 1;
-  robus.posY = 9;
+  rob.facing = 'n';
+  rob.posX = 1;
+  rob.posY = 9;
 }
