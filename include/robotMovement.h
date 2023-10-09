@@ -43,3 +43,4 @@ void resetEncoders();
 void turn(float speed, float angle, int direction);
 void ChangeStatus(int distance);
 void ChangeStatus(float angle, int direction);
+void RobotMouvementInit(void);

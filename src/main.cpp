@@ -1,38 +1,37 @@
+#include <Arduino.h>
 #include <LibRobus.h>
 
 #include "robotMovement.h"
+#include "detection.h"
 
-void buzz();
+#define START_ROW 1
+#define END_ROW 9
 
-void setup()
-{
+#define FIRST_COLUMN 1
+#define SECOND_COLUMN 2
+#define THIRD_COLUMN 3
+
+#define BOX_DIMENSION 50
+
+int signal;
+
+void setup() {
   BoardInit();
-
-  move(0.3, 500);
-  stop();
-
+  RobotMouvementInit();
+  DetectionInit();
+  signal = OFF;
 }
 
-void loop()
-{
-  if (ROBUS_IsBumper(3))
-  {
-    move(0.2, 500);
-    stop();
-  } else if (ROBUS_IsBumper(2))
-  {
-    move(0.1, 250);
-    stop();
-  } else if (ROBUS_IsBumper(1))
-  {
-    move(0.9, 250);
-    stop();
-  }
-}
+void loop() {
+  if (detect_whistle() == 1)
+    signal = ON;
 
-void buzz() 
-{
-  AX_BuzzerON();
-  delay(100);
-  AX_BuzzerOFF();
+  if (robus.posY == END_ROW)
+    signal = OFF;
+
+  if (signal == ON){
+      if(detect_wall() == 1)
+        signal = OFF;
+    move(0.2, BOX_DIMENSION);
+  } 
 }

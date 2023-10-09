@@ -160,3 +160,9 @@ void ChangeStatus(float angle, int direction) {
         break;
     }
 }
+
+void RobotMouvementInit(void) {
+  robus.facing = 'n';
+  robus.posX = 1;
+  robus.posY = 9;
+}
