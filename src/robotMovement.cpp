@@ -1,4 +1,9 @@
+#include <LibRobus.h>
+
+#include "math.h"
 #include "robotMovement.h"
+
+Status robot;
 
 void move(float motorSpeed, int distance_cm)
 {
@@ -7,14 +12,14 @@ void move(float motorSpeed, int distance_cm)
   MOTOR_SetSpeed(RIGHT_MOTOR, motorSpeed);
   // sigmoid logistic
   float distance_wheelCycles = (float)distance_cm / WHEEL_CIRCONFERENCE_CM;
-
+  
   while ((float)ENCODER_Read(LEFT_MOTOR) <= PULSES_PER_WHEEL_CYCLE * distance_wheelCycles)
   {
     correctDirection(motorSpeed, PULSES_PER_WHEEL_CYCLE * distance_wheelCycles);
   }
   stop();
   
-  ChangeStatus(distance_cm);
+  ChangeStatus(distance_cm/BOX_DIMENSION);
 }
 
 void stop()
@@ -44,7 +49,8 @@ void correctDirection(float motorSpeed, float distance_pulses)
     return;
   }
   float newSpeedLeft = motorSpeed - (0.0005 * pulsesDifference);
-  /*#ifdef DEBUG
+  /*
+  #ifdef DEBUG
     Serial.print("expec: ");
     Serial.print(expectedPulses);
     Serial.print(", cur: ");
@@ -53,8 +59,8 @@ void correctDirection(float motorSpeed, float distance_pulses)
     Serial.print(pulsesDifference);
     Serial.print(", nspeedL: ");
     Serial.println(newSpeedLeft);
-  #endif*/
-
+  #endif
+  */
   MOTOR_SetSpeed(LEFT_MOTOR, newSpeedLeft);
 }
 
@@ -106,18 +112,18 @@ void turn(float speed, float angle, int direction) {
 }
 
 void ChangeStatus(int distance) {
-  switch (rob.facing) {
+  switch (robot.facing) {
     case 'e':
-      rob.posX += distance;
+      robot.posX += distance;
         break;
     case 'w':
-      rob.posX -= distance;
+      robot.posX -= distance;
       break;
     case 'n':
-      rob.posY += distance;
+      robot.posY += distance;
       break;
     case 's':
-      rob.posY -= distance;
+      robot.posY -= distance;
       break;
     default:
       break;
@@ -126,35 +132,35 @@ void ChangeStatus(int distance) {
 
 void ChangeStatus(float angle, int direction) {
   if(angle == 90)
-    switch(rob.facing) {
+    switch(robot.facing) {
       case 'n':
-        rob.facing = (direction == 1) ? 'w' : 'e';
+        robot.facing = (direction == 1) ? 'w' : 'e';
         break;
       case 'w':
-        rob.facing = (direction == 1) ? 's' : 'n';
+        robot.facing = (direction == 1) ? 's' : 'n';
        break;
       case 'e':
-       rob.facing = (direction == 1) ? 'n' : 's';
+       robot.facing = (direction == 1) ? 'n' : 's';
         break;
       case 's':
-       rob.facing = (direction == 1) ? 'e' : 'w';
+       robot.facing = (direction == 1) ? 'e' : 'w';
          break;
       default:
          break;
     }
   else
-    switch(rob.facing) {
+    switch(robot.facing) {
       case 'n':
-        rob.facing = 's';
+        robot.facing = 's';
         break;
       case 'w':
-        rob.facing = 'e';
+        robot.facing = 'e';
         break;
       case 'e':
-        rob.facing = 'w';
+        robot.facing = 'w';
         break;
       case 's':
-        rob.facing = 'n';
+        robot.facing = 'n';
         break;
       default:
         break;
@@ -162,7 +168,7 @@ void ChangeStatus(float angle, int direction) {
 }
 
 void RobotMouvementInit(void) {
-  rob.facing = 'n';
-  rob.posX = 1;
-  rob.posY = 9;
+  robot.facing = 'n';
+  robot.posX = 1;
+  robot.posY = 9;
 }

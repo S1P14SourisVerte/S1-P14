@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include "detection.h"
 
 int detect_wall(void) {

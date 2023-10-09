@@ -1,4 +1,5 @@
-#include <LibRobus.h>
+#ifndef DETECTION_H
+#define DETECTION_H
 
 #define ON 1
 #define OFF 0
@@ -9,3 +10,4 @@
 int detect_wall(void);
 int detect_whistle(void);
 void DetectionInit(void);
+#endif

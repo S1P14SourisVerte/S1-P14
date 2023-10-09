@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <LibRobus.h>
 
 #include "robotMovement.h"
@@ -11,27 +10,36 @@
 #define SECOND_COLUMN 2
 #define THIRD_COLUMN 3
 
-#define BOX_DIMENSION 50
-
 int signal;
+int add_degree;
 
 void setup() {
   BoardInit();
   RobotMouvementInit();
   DetectionInit();
   signal = ON;
+  add_degree = 0;
 }
 
 void loop() {
+  
   if (detect_whistle() == 1)
     signal = ON;
 
-  if (rob.posY == END_ROW)
-    signal = OFF;
-
-  if (signal == ON){
-      if(detect_wall() == 1)
-        signal = OFF;
-    move(0.2, BOX_DIMENSION);
+  signal = (detect_wall() == 0) ? ON : OFF;
+  
+  if(signal == OFF){
+        turn(0.2, 90 + add_degree, LEFT);
+        add_degree = 90;
+  }
+    turn(0.2, 90, LEFT);
+  
+  if (signal == ON) {
+    move(0.3, BOX_DIMENSION);
+    Serial.print("X : ");
+    Serial.println (robot.posX);
+    Serial.print("Y : ");
+    Serial.println(robot.posY); 
+    add_degree = 0;
   } 
 }
