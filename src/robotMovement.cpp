@@ -70,43 +70,41 @@ void resetEncoders()
   ENCODER_ReadReset(RIGHT_MOTOR);
 }
 
-void turn(float speed, float angle) {
-
+void turn(float motorSpeed, turnDirection direction, float angle = 90.0f) 
+{
   resetEncoders();
 
-  float ratio_p_a;
-  float ratio_a_c;
-  float circonferenceTrajectory = 23.88;
-  float circonferenceWheel = 9.4247;
-  float pulses;
-  float pulseEncoder1;
-  float pulseEncoder2;
+  int distance_pulses = 
+    (((angle / 360) * SELF_TURN_CIRCONFERENCE_CM) / WHEEL_CIRCONFERENCE_CM) * PULSES_PER_WHEEL_CYCLE;
 
-  ratio_a_c = (angle / 360) * circonferenceTrajectory;
-  ratio_p_a = (ratio_a_c / circonferenceWheel);
-  pulses = (ratio_p_a * 3200);
+  int currentLeftPulses = abs(ENCODER_Read(LEFT_MOTOR));
+  int currentRightPulses = abs(ENCODER_Read(RIGHT_MOTOR));
+  int pulsesDifference = currentLeftPulses - currentRightPulses;
 
-  // Encoder variable
-  pulseEncoder1 = ENCODER_Read(0);
-  pulseEncoder2 = ENCODER_Read(1);
+  while (currentLeftPulses < distance_pulses) {
+    
+    #ifdef DEBUG
+      Serial.print("pd: ");
+      Serial.println(pulsesDifference);
+    #endif
 
-  if (angle > 0) {
-    while ((pulses >= pulseEncoder1) && (pulses >= pulseEncoder2)) {
-      MOTOR_SetSpeed(0, (0.9721 * speed));
-      MOTOR_SetSpeed(1, -speed);
-      pulseEncoder1 = ENCODER_Read(0);
-      pulseEncoder2 = ENCODER_Read(1);
+    if (pulsesDifference > 0) {
+      MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
+      MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction * (1 + (TURN_CORRECTION_FACTOR * (0.001 * pulsesDifference))));
+    } else if (pulsesDifference < 1) {
+      MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction * (1 + (TURN_CORRECTION_FACTOR * (0.001 * pulsesDifference))));
+      MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction);
+    } else {
+      MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
+      MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction);
     }
-  } else
-    while ((pulses >= pulseEncoder1) && (pulses >= pulseEncoder2)) {
-      MOTOR_SetSpeed(0, (-0.988 * speed));
-      MOTOR_SetSpeed(1, speed);
-      pulseEncoder1 = ENCODER_Read(0);
-      pulseEncoder2 = ENCODER_Read(1);
-    }
-
-  MOTOR_SetSpeed(0, 0);
-  MOTOR_SetSpeed(1, 0);
+    
+    currentLeftPulses = abs(ENCODER_Read(LEFT_MOTOR));
+    currentRightPulses = abs(ENCODER_Read(RIGHT_MOTOR));
+    pulsesDifference = currentLeftPulses - currentRightPulses;
+  }
+  MOTOR_SetSpeed(LEFT_MOTOR, 0);
+  MOTOR_SetSpeed(RIGHT_MOTOR, 0);
 
   ChangeStatus(angle); // Positive angle : LEFT   Negative angle : RIGHT
 }
@@ -130,20 +128,20 @@ void ChangeStatus(int distance) {
   }
 }
 
-void ChangeStatus(float angle) {
+void ChangeStatus(turnDirection direction, float angle) {
   if(abs(angle) == 90)
     switch(robot.facing) {
       case 'n':
-        robot.facing = (angle > 0) ? 'w' : 'e';
+        robot.facing = (direction == LeftTurn) ? 'w' : 'e';
         break;
       case 'w':
-        robot.facing = (angle > 0) ? 's' : 'n';
+        robot.facing = (direction == LeftTurn) ? 's' : 'n';
        break;
       case 'e':
-       robot.facing = (angle > 0) ? 'n' : 's';
+       robot.facing = (direction == LeftTurn) ? 'n' : 's';
         break;
       case 's':
-       robot.facing = (angle > 0) ? 'e' : 'w';
+       robot.facing = (direction == LeftTurn) ? 'e' : 'w';
          break;
       default:
          break;
