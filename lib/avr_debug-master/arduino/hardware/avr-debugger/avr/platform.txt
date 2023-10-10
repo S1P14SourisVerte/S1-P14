@@ -1,2 +1,0 @@
-name=avr_debugger 
-version=1.0

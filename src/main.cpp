@@ -1,4 +1,4 @@
-#include <LibRobus.h>
+#include "LibRobus.h"
 
 #include "robotMovement.h"
 
@@ -8,13 +8,17 @@ void setup()
 {
   BoardInit();
 
-  move(0.3, 500);
-  stop();
+  // move(0.3, 500);
+  // stop();
 
 }
 
 void loop()
 {
+  turn(0.2, LeftTurn);
+  delay(1000);
+  // turn(0.1, RightTurn);
+  // delay(1000);
   if (ROBUS_IsBumper(3))
   {
     move(0.2, 500);

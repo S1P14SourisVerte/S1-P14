@@ -3,10 +3,12 @@
 #include "math.h"
 
 #ifdef ROBOT_B
+    #define TURN_CORRECTION_FACTOR 3
     #define CORRECTION_REAR_WHEEL_RIGHT_TURN_DEG 1.5f
     #define CORRECTION_REAR_WHEEL_LEFT_TURN_DEG 1.75f
 #else
     #ifdef ROBOT_A
+        #define TURN_CORRECTION_FACTOR 1
         #define CORRECTION_REAR_WHEEL_RIGHT_TURN_DEG 100.0f
         #define CORRECTION_REAR_WHEEL_LEFT_TURN_DEG 100.0f
     #endif
@@ -17,9 +19,8 @@
 #define MOTOR_BASE_SPEED 0.01f
 
 #define WHEEL_CIRCONFERENCE_CM 23.93f
+#define SELF_TURN_CIRCONFERENCE_CM 60.65f
 #define PULSES_PER_WHEEL_CYCLE 3200.0f
-
-#define SELF_TURN_CIRCONFERENCE_CM 59.3761f
 
 #define CORRECTION_MOTOR_SPEED_FACTOR 1.05f
 // #define CORRECTION_MOTOR_SPEED_FACTOR 1.25f
@@ -31,6 +32,7 @@ typedef enum {
 } turnDirection;
 
 void move(float motorSpeed, int distance_cm);
+void turn(float motorSpeed, turnDirection direction, float angle = 90.0f);
 void stop();
 void correctDirection(float motorSpeed, float distance_pulses);
 void resetEncoders();
