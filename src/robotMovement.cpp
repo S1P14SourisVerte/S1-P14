@@ -20,6 +20,7 @@ void move(float motorSpeed, int distance_cm)
   stop();
   
   ChangeStatus(distance_cm/BOX_DIMENSION);
+  delay(100);
 }
 
 void stop()
@@ -106,7 +107,8 @@ void turn(float motorSpeed, turnDirection direction, float angle = 90.0f)
   MOTOR_SetSpeed(LEFT_MOTOR, 0);
   MOTOR_SetSpeed(RIGHT_MOTOR, 0);
 
-  ChangeStatus(angle); // Positive angle : LEFT   Negative angle : RIGHT
+  ChangeStatus(direction, angle); // Positive angle : LEFT   Negative angle : RIGHT
+  delay(100);
 }
 
 void ChangeStatus(int distance) {
@@ -118,10 +120,10 @@ void ChangeStatus(int distance) {
       robot.posX -= distance;
       break;
     case 'n':
-      robot.posY += distance;
+      robot.posY -= distance;
       break;
     case 's':
-      robot.posY -= distance;
+      robot.posY += distance;
       break;
     default:
       break;
