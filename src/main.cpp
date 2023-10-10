@@ -2,44 +2,46 @@
 
 #include "robotMovement.h"
 #include "detection.h"
+#include "matrice.h"
 
-#define START_ROW 1
-#define END_ROW 9
-
-#define FIRST_COLUMN 1
-#define SECOND_COLUMN 2
-#define THIRD_COLUMN 3
-
-int signal;
-int add_degree;
+int active;
 
 void setup() {
   BoardInit();
   RobotMouvementInit();
   DetectionInit();
-  signal = ON;
-  add_degree = 0;
+  MatriceInit();
+  active = YES;
 }
 
 void loop() {
-  
-  if (detect_whistle() == 1)
-    signal = ON;
 
-  signal = (detect_wall() == 0) ? ON : OFF;
-  
-  if(signal == OFF){
-        turn(0.2, 90 + add_degree, LEFT);
-        add_degree = 90;
+  if (detect_whistle() == 1)
+    active = YES;
+
+  if(robot.posY == 9) {
+    active = NO;
+    Serial.println(robot.posY);
   }
-    turn(0.2, 90, LEFT);
-  
-  if (signal == ON) {
-    move(0.3, BOX_DIMENSION);
+
+  active = (detect_wall() == 0) ? YES : NO;
+
+  if (active == YES) { // There's no wall
+    path[robot.posY][robot.posX] = 1;
+    orientation = 0;
+
+    move(0.2, BOX_DIMENSION);
     Serial.print("X : ");
     Serial.println (robot.posX);
     Serial.print("Y : ");
-    Serial.println(robot.posY); 
-    add_degree = 0;
-  } 
+    Serial.println(robot.posY);
+
+  } else { // There's a wall
+    if(robot.posY == 0) {
+      turn(0.2, 90);
+    } 
+    else if(robot.posY % 2 == 0) {
+     turn(0.2, 90);
+    }
+  }
 }

@@ -43,8 +43,8 @@ void move(float motorSpeed, int distance_cm);
 void stop();
 void correctDirection(float motorSpeed, float distance_pulses);
 void resetEncoders();
-void turn(float speed, float angle, int direction);
+void turn(float speed, float angle);
 void ChangeStatus(int distance);
-void ChangeStatus(float angle, int direction);
+void ChangeStatus(float angle);
 void RobotMouvementInit(void);
 #endif

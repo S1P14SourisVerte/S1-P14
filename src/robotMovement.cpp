@@ -70,7 +70,7 @@ void resetEncoders()
   ENCODER_ReadReset(RIGHT_MOTOR);
 }
 
-void turn(float speed, float angle, int direction) {
+void turn(float speed, float angle) {
 
   resetEncoders();
 
@@ -90,7 +90,7 @@ void turn(float speed, float angle, int direction) {
   pulseEncoder1 = ENCODER_Read(0);
   pulseEncoder2 = ENCODER_Read(1);
 
-  if (direction == 0) {
+  if (angle > 0) {
     while ((pulses >= pulseEncoder1) && (pulses >= pulseEncoder2)) {
       MOTOR_SetSpeed(0, (0.9721 * speed));
       MOTOR_SetSpeed(1, -speed);
@@ -108,7 +108,7 @@ void turn(float speed, float angle, int direction) {
   MOTOR_SetSpeed(0, 0);
   MOTOR_SetSpeed(1, 0);
 
-  ChangeStatus(angle, direction); // 0: Right   1:Left
+  ChangeStatus(angle); // Positive angle : LEFT   Negative angle : RIGHT
 }
 
 void ChangeStatus(int distance) {
@@ -130,25 +130,25 @@ void ChangeStatus(int distance) {
   }
 }
 
-void ChangeStatus(float angle, int direction) {
-  if(angle == 90)
+void ChangeStatus(float angle) {
+  if(abs(angle) == 90)
     switch(robot.facing) {
       case 'n':
-        robot.facing = (direction == 1) ? 'w' : 'e';
+        robot.facing = (angle > 0) ? 'w' : 'e';
         break;
       case 'w':
-        robot.facing = (direction == 1) ? 's' : 'n';
+        robot.facing = (angle > 0) ? 's' : 'n';
        break;
       case 'e':
-       robot.facing = (direction == 1) ? 'n' : 's';
+       robot.facing = (angle > 0) ? 'n' : 's';
         break;
       case 's':
-       robot.facing = (direction == 1) ? 'e' : 'w';
+       robot.facing = (angle > 0) ? 'e' : 'w';
          break;
       default:
          break;
     }
-  else
+  else if(abs(angle) == 180)
     switch(robot.facing) {
       case 'n':
         robot.facing = 's';

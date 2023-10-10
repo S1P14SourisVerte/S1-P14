@@ -1,8 +1,8 @@
 #ifndef DETECTION_H
 #define DETECTION_H
 
-#define ON 1
-#define OFF 0
+#define YES 1
+#define NO 0
 #define GREEN 28
 #define RED 26
 #define PIN_WHISTLE A0
