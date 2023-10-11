@@ -43,6 +43,7 @@ extern Status robot;
 void move(float motorSpeed, int distance_cm);
 void stop();
 void correctDirection(float motorSpeed, float distance_pulses);
+void correctTurnDirection(float motorSpeed, turnDirection direction);
 void resetEncoders();
 void turn(float motorSpeed, turnDirection direction, float angle = 90.0f);
 void ChangeStatus(int distance);

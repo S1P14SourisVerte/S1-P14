@@ -26,8 +26,6 @@ void loop() {
 
   if(robot.posY == END_ROW){
       active = NO;
-      robot.posY = 9; //INITIALISATION OF POSITION
-      robot.posX = 1;
   }
 
   if(active == YES) {
@@ -48,7 +46,7 @@ void loop() {
 
           if(detect_wall() == 1) 
           {
-            turn(TURN_SPEED, LeftTurn, 180.0f);
+            turn(TURN_SPEED, RightTurn, 180.0f);
 
             while (detect_wall() == 0)
              move(FORWARD_SPEED, BOX_DIMENSION);
@@ -58,7 +56,7 @@ void loop() {
             turn(TURN_SPEED, LeftTurn);
 
             while (detect_wall() == 0)
-             move(FORWARD_SPEED, BOX_DIMENSION || robot.posY == END_ROW);
+             move(FORWARD_SPEED, BOX_DIMENSION);
           }
         }
         else 
@@ -69,7 +67,7 @@ void loop() {
       }
       else
         while (detect_wall() == 0)
-          move(FORWARD_SPEED, BOX_DIMENSION || robot.posY == END_ROW);    
+          move(FORWARD_SPEED, BOX_DIMENSION);    
     }
 
     /***    Robot is in the second column      ***/
@@ -101,7 +99,7 @@ void loop() {
         }
       }
       else 
-        while (detect_wall() == 0 || robot.posY == END_ROW)
+        while (detect_wall() == 0)
           move(FORWARD_SPEED, BOX_DIMENSION);
     }
 
@@ -120,7 +118,7 @@ void loop() {
 
           if(detect_wall() == 1) 
           {
-            turn(TURN_SPEED, RightTurn, 180.0f);
+            turn(TURN_SPEED, LeftTurn, 180.0f);
 
             while (detect_wall() == 0)
              move(FORWARD_SPEED, BOX_DIMENSION);
@@ -129,7 +127,7 @@ void loop() {
             move(FORWARD_SPEED, BOX_DIMENSION);
             turn(TURN_SPEED, RightTurn);
 
-            while (detect_wall() == 0|| robot.posY == END_ROW)
+            while (detect_wall() == 0)
              move(FORWARD_SPEED, BOX_DIMENSION);
           }
         }
@@ -140,7 +138,7 @@ void loop() {
         }
       }
       else
-        while (detect_wall() == 0 || robot.posY == END_ROW)
+        while (detect_wall() == 0)
           move(FORWARD_SPEED, BOX_DIMENSION);
     }
   }
