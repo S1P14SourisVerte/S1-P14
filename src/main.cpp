@@ -48,14 +48,14 @@ void loop() {
           {
             turn(TURN_SPEED, RightTurn, 180.0f);
 
-            while (detect_wall() == 0)
+            while (detect_wall() == 0 || robot.posY > END_ROW)
              move(FORWARD_SPEED, BOX_DIMENSION);
 
             turn(TURN_SPEED, LeftTurn);
             move(FORWARD_SPEED, BOX_DIMENSION);
             turn(TURN_SPEED, LeftTurn);
 
-            while (detect_wall() == 0)
+            while (detect_wall() == 0 || robot.posY > END_ROW)
              move(FORWARD_SPEED, BOX_DIMENSION);
           }
         }
@@ -66,7 +66,7 @@ void loop() {
         }
       }
       else
-        while (detect_wall() == 0)
+        while (detect_wall() == 0 || robot.posY > END_ROW)
           move(FORWARD_SPEED, BOX_DIMENSION);    
     }
 
@@ -99,7 +99,7 @@ void loop() {
         }
       }
       else 
-        while (detect_wall() == 0)
+        while (detect_wall() == 0 || robot.posY > END_ROW)
           move(FORWARD_SPEED, BOX_DIMENSION);
     }
 
@@ -120,14 +120,14 @@ void loop() {
           {
             turn(TURN_SPEED, LeftTurn, 180.0f);
 
-            while (detect_wall() == 0)
+            while (detect_wall() == 0 || robot.posY > END_ROW)
              move(FORWARD_SPEED, BOX_DIMENSION);
 
             turn(TURN_SPEED, RightTurn);
             move(FORWARD_SPEED, BOX_DIMENSION);
             turn(TURN_SPEED, RightTurn);
 
-            while (detect_wall() == 0)
+            while (detect_wall() == 0 || robot.posY > END_ROW)
              move(FORWARD_SPEED, BOX_DIMENSION);
           }
         }
@@ -138,7 +138,7 @@ void loop() {
         }
       }
       else
-        while (detect_wall() == 0)
+        while (detect_wall() == 0 || robot.posY > END_ROW)
           move(FORWARD_SPEED, BOX_DIMENSION);
     }
   }
