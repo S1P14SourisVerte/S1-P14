@@ -21,6 +21,11 @@ void move(float motorSpeed, int distance_cm)
   
   ChangeStatus(distance_cm/BOX_DIMENSION);
   delay(100);
+  Serial.print("X : ");
+  Serial.println(robot.posX);
+  Serial.print("Y : ");
+  Serial.println(robot.posY);
+
 }
 
 void stop()
@@ -83,12 +88,12 @@ void turn(float motorSpeed, turnDirection direction, float angle = 90.0f)
   int pulsesDifference = currentLeftPulses - currentRightPulses;
 
   while (currentLeftPulses < distance_pulses) {
-    
+    /*
     #ifdef DEBUG
       Serial.print("pd: ");
       Serial.println(pulsesDifference);
     #endif
-
+  */
     if (pulsesDifference > 0) {
       MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
       MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction * (1 + (TURN_CORRECTION_FACTOR * (0.001 * pulsesDifference))));
@@ -107,7 +112,7 @@ void turn(float motorSpeed, turnDirection direction, float angle = 90.0f)
   MOTOR_SetSpeed(LEFT_MOTOR, 0);
   MOTOR_SetSpeed(RIGHT_MOTOR, 0);
 
-  ChangeStatus(direction, angle); // Positive angle : LEFT   Negative angle : RIGHT
+  ChangeStatus(direction, angle);
   delay(100);
 }
 

@@ -4,8 +4,8 @@
 #include "detection.h"
 #include "matrice.h"
 
-#define TURN_SPEED 0.15
-#define FORWARD_SPEED 0.25
+#define TURN_SPEED 0.2
+#define FORWARD_SPEED 0.3
 
 int active;
 
@@ -24,8 +24,11 @@ void loop() {
   if (detect_whistle() == 1)
     active = YES;
 
-  if(robot.posY == 0)
-    active = NO;
+  if(robot.posY == END_ROW){
+      active = NO;
+      robot.posY = 9; //INITIALISATION OF POSITION
+      robot.posX = 1;
+  }
 
   if(active == YES) {
     delay(500);
@@ -55,7 +58,7 @@ void loop() {
             turn(TURN_SPEED, LeftTurn);
 
             while (detect_wall() == 0)
-             move(FORWARD_SPEED, BOX_DIMENSION);
+             move(FORWARD_SPEED, BOX_DIMENSION || robot.posY == END_ROW);
           }
         }
         else 
@@ -66,7 +69,7 @@ void loop() {
       }
       else
         while (detect_wall() == 0)
-          move(FORWARD_SPEED, BOX_DIMENSION);    
+          move(FORWARD_SPEED, BOX_DIMENSION || robot.posY == END_ROW);    
     }
 
     /***    Robot is in the second column      ***/
@@ -98,7 +101,7 @@ void loop() {
         }
       }
       else 
-        while (detect_wall() == 0)
+        while (detect_wall() == 0 || robot.posY == END_ROW)
           move(FORWARD_SPEED, BOX_DIMENSION);
     }
 
@@ -126,7 +129,7 @@ void loop() {
             move(FORWARD_SPEED, BOX_DIMENSION);
             turn(TURN_SPEED, RightTurn);
 
-            while (detect_wall() == 0)
+            while (detect_wall() == 0|| robot.posY == END_ROW)
              move(FORWARD_SPEED, BOX_DIMENSION);
           }
         }
@@ -137,7 +140,7 @@ void loop() {
         }
       }
       else
-        while (detect_wall() == 0)
+        while (detect_wall() == 0 || robot.posY == END_ROW)
           move(FORWARD_SPEED, BOX_DIMENSION);
     }
   }
