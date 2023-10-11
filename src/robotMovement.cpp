@@ -15,52 +15,51 @@ void move(float motorSpeed, int distance_cm)
   stop();
 }
 
-#ifdef ROBOT_B
-void turn(float motorSpeed,  turnDirection direction, float angle = 90.0f) 
-{
-  resetEncoders();
+// #ifdef ROBOT_B
+// void turn(float motorSpeed,  turnDirection direction, float angle = 90.0f) 
+// {
+//   resetEncoders();
 
-  int distance_pulses = 
-    (((angle / 360) * SELF_TURN_CIRCONFERENCE_CM) / WHEEL_CIRCONFERENCE_CM) * PULSES_PER_WHEEL_CYCLE;
+//   int distance_pulses = 
+//     (((angle / 360) * SELF_TURN_CIRCONFERENCE_CM) / WHEEL_CIRCONFERENCE_CM) * PULSES_PER_WHEEL_CYCLE;
 
-  int currentLeftPulses = abs(ENCODER_Read(LEFT_MOTOR));
-  int currentRightPulses = abs(ENCODER_Read(RIGHT_MOTOR));
-  int pulsesDifference = currentLeftPulses - currentRightPulses;
+//   int currentLeftPulses = abs(ENCODER_Read(LEFT_MOTOR));
+//   int currentRightPulses = abs(ENCODER_Read(RIGHT_MOTOR));
+//   int pulsesDifference = currentLeftPulses - currentRightPulses;
 
-  while (currentLeftPulses < distance_pulses) {
+//   while (currentLeftPulses < distance_pulses) {
     
-    #ifdef DEBUG
-      Serial.print("lp: ");
-      Serial.print(currentLeftPulses);
-      Serial.print(", rp: ");
-      Serial.print(currentRightPulses);
-      Serial.print(", pd: ");
-      Serial.println(pulsesDifference);
-    #endif
+//     #ifdef DEBUG
+//       Serial.print("lp: ");
+//       Serial.print(currentLeftPulses);
+//       Serial.print(", rp: ");
+//       Serial.print(currentRightPulses);
+//       Serial.print(", pd: ");
+//       Serial.println(pulsesDifference);
+//     #endif
 
-    if (pulsesDifference > 0) {
-      MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction / (1 + (TURN_CORRECTION_FACTOR * (0.001 * pulsesDifference))));
-      MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction);
-    } else if (pulsesDifference < 0) {
-      MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
-      MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction / (1 + (TURN_CORRECTION_FACTOR * (0.001 * pulsesDifference))));
-    } else {
-      MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
-      MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction);
-    }
+//     if (pulsesDifference > 0) {
+//       MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction / (1 + (TURN_CORRECTION_FACTOR * (0.001 * pulsesDifference))));
+//       MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction);
+//     } else if (pulsesDifference < 0) {
+//       MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
+//       MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction / (1 + (TURN_CORRECTION_FACTOR * (0.001 * pulsesDifference))));
+//     } else {
+//       MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
+//       MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction);
+//     }
     
-    currentLeftPulses = abs(ENCODER_Read(LEFT_MOTOR));
-    currentRightPulses = abs(ENCODER_Read(RIGHT_MOTOR));
-    pulsesDifference = currentLeftPulses - currentRightPulses;
-  }
-  MOTOR_SetSpeed(LEFT_MOTOR, 0);
-  MOTOR_SetSpeed(RIGHT_MOTOR, 0);
-}
-#endif
+//     currentLeftPulses = abs(ENCODER_Read(LEFT_MOTOR));
+//     currentRightPulses = abs(ENCODER_Read(RIGHT_MOTOR));
+//     pulsesDifference = currentLeftPulses - currentRightPulses;
+//   }
+//   MOTOR_SetSpeed(LEFT_MOTOR, 0);
+//   MOTOR_SetSpeed(RIGHT_MOTOR, 0);
+// }
+// #endif
 
 #ifdef ROBOT_A
-
-void turn(float motorSpeed, turnDirection direction, float angle = 90.0)
+void turnA(float motorSpeed, turnDirection direction, float angle = 90.0)
 {
   resetEncoders();
   MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
@@ -71,6 +70,29 @@ void turn(float motorSpeed, turnDirection direction, float angle = 90.0)
   }
   else {
     angleCorrectionFactor = 0.5;
+  }
+  float distance_cm = ((SELF_TURN_CIRCONFERENCE_CM / 360.0f) * (angle - angleCorrectionFactor));
+  float distance_wheelCycles = (float)distance_cm / WHEEL_CIRCONFERENCE_CM;
+  while (abs((float)ENCODER_Read(LEFT_MOTOR)) <= PULSES_PER_WHEEL_CYCLE * distance_wheelCycles)
+  {
+    correctTurnDirection(motorSpeed, direction);
+  }
+  stop();
+}
+#endif
+
+#ifdef ROBOT_B
+void turn(float motorSpeed, turnDirection direction, float angle = 90.0)
+{
+  resetEncoders();
+  MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
+  MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction);
+  float angleCorrectionFactor = 1.5;
+  if (direction == LeftTurn) {
+    angleCorrectionFactor = -1.15;
+  }
+  else {
+    angleCorrectionFactor = -0.55;
   }
   float distance_cm = ((SELF_TURN_CIRCONFERENCE_CM / 360.0f) * (angle - angleCorrectionFactor));
   float distance_wheelCycles = (float)distance_cm / WHEEL_CIRCONFERENCE_CM;

@@ -18,7 +18,7 @@ void loop()
   // move(0.2, 50);
   // delay(50);
   // move(0.3, 250);
-  turn(0.2, LeftTurn);
+  turn(0.2, RightTurn);
   // turn(0.2, RightTurn);
   // turn2(0.2, 90, 0);
   // buzz();
