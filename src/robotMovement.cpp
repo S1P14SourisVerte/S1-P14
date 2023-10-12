@@ -59,17 +59,17 @@ void move(float motorSpeed, int distance_cm)
 // #endif
 
 #ifdef ROBOT_A
-void turnA(float motorSpeed, turnDirection direction, float angle = 90.0)
+void turn(float motorSpeed, turnDirection direction, float angle = 90.0)
 {
   resetEncoders();
   MOTOR_SetSpeed(LEFT_MOTOR, motorSpeed * direction);
   MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction);
   float angleCorrectionFactor = 1.5;
   if (direction == LeftTurn) {
-    angleCorrectionFactor = 1.5;
+    angleCorrectionFactor = 0.45;
   }
   else {
-    angleCorrectionFactor = 0.5;
+    angleCorrectionFactor = 0.2;
   }
   float distance_cm = ((SELF_TURN_CIRCONFERENCE_CM / 360.0f) * (angle - angleCorrectionFactor));
   float distance_wheelCycles = (float)distance_cm / WHEEL_CIRCONFERENCE_CM;
@@ -92,7 +92,7 @@ void turn(float motorSpeed, turnDirection direction, float angle = 90.0)
     angleCorrectionFactor = -1.15;
   }
   else {
-    angleCorrectionFactor = -0.55;
+    angleCorrectionFactor = -0.09;
   }
   float distance_cm = ((SELF_TURN_CIRCONFERENCE_CM / 360.0f) * (angle - angleCorrectionFactor));
   float distance_wheelCycles = (float)distance_cm / WHEEL_CIRCONFERENCE_CM;
