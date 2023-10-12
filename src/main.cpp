@@ -17,7 +17,7 @@ void setup() {
   active = YES;
 }
 
-// Initial: robot.posX = 1 (milieu) et robot.posY = 0 (première) en regardant le nord
+// Initial: robot.posX = 1 (milieu) et robot.posY = 9 (première) en regardant le nord
 
 void loop() {
 
@@ -25,6 +25,8 @@ void loop() {
     active = YES;
 
   if(robot.posY == END_ROW){
+      robot.posX = 1;
+      robot.posY = 9;
       active = NO;
   }
 
@@ -44,11 +46,11 @@ void loop() {
         {
           turn(TURN_SPEED, LeftTurn);
 
-          if(detect_wall() == 1) 
+          if(detect_wall() == 1 || path[robot.posY - 1][robot.posX] == 1) 
           {
             turn(TURN_SPEED, RightTurn, 180.0f);
 
-            while (detect_wall() == 0 || robot.posY > END_ROW)
+            while (detect_wall() == 0 || robot.posY > END_ROW || path[robot.posY + 1][robot.posX] == 1)
              move(FORWARD_SPEED, BOX_DIMENSION);
 
             turn(TURN_SPEED, LeftTurn);
@@ -74,12 +76,12 @@ void loop() {
     else if(robot.posX == 1)
     {
 
-      if (detect_wall() == 1)
+      if (detect_wall() == 1 || path[robot.posY - 1][robot.posX] == 1)
       {
         if (path[robot.posY][robot.posX - 1] == 0)
         {
           turn(TURN_SPEED, LeftTurn);
-          if(detect_wall() == 1)
+          if(detect_wall() == 1  || path[robot.posY - 1][robot.posX] == 1)
           {
             turn(TURN_SPEED, LeftTurn, 180);
             move(FORWARD_SPEED, BOX_DIMENSION);
@@ -99,7 +101,7 @@ void loop() {
         }
       }
       else 
-        while (detect_wall() == 0 || robot.posY > END_ROW)
+        while (detect_wall() == 0 || robot.posY > END_ROW || path[robot.posY - 1][robot.posX] == 1)
           move(FORWARD_SPEED, BOX_DIMENSION);
     }
 
@@ -116,11 +118,11 @@ void loop() {
         {
           turn(TURN_SPEED, RightTurn);
 
-          if(detect_wall() == 1) 
+          if(detect_wall() == 1 || path[robot.posY - 1][robot.posX] == 1) 
           {
             turn(TURN_SPEED, LeftTurn, 180.0f);
 
-            while (detect_wall() == 0 || robot.posY > END_ROW)
+            while (detect_wall() == 0 || robot.posY > END_ROW || path[robot.posY + 1][robot.posX] == 1)
              move(FORWARD_SPEED, BOX_DIMENSION);
 
             turn(TURN_SPEED, RightTurn);

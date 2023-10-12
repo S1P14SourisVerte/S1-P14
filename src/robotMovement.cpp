@@ -84,10 +84,10 @@ void turn(float motorSpeed, turnDirection direction, float angle = 90.0)
   MOTOR_SetSpeed(RIGHT_MOTOR, -motorSpeed * direction);
   float angleCorrectionFactor = 1.5;
   if (direction == LeftTurn) {
-    angleCorrectionFactor = 1.65;
+    angleCorrectionFactor = 0.45;
   }
   else {
-    angleCorrectionFactor = 0.5;
+    angleCorrectionFactor = 0.2;
   }
   float distance_cm = ((SELF_TURN_CIRCONFERENCE_CM / 360.0f) * (angle - angleCorrectionFactor));
   float distance_wheelCycles = (float)distance_cm / WHEEL_CIRCONFERENCE_CM;
