@@ -14,14 +14,14 @@ void setup() {
   RobotMouvementInit();
   DetectionInit();
   MatriceInit();
-  active = YES;
+  active = NO;
 }
 
 // Initial: robot.posX = 1 (milieu) et robot.posY = 9 (première) en regardant le nord
 
 void loop() {
-
-  if (detect_whistle() == 1)
+  
+  if(detect_whistle() == 1)
     active = YES;
 
   if(robot.posY == END_ROW){
@@ -36,6 +36,7 @@ void loop() {
     /***    Robot is in the first column      ***/
     if(robot.posX == 0)
     {
+      Serial.println(robot.posX);
       if (detect_wall() == 1)
       {
         path[robot.posY][robot.posX] = 1;
@@ -68,20 +69,23 @@ void loop() {
         }
       }
       else
-        while (detect_wall() == 0 || robot.posY > END_ROW)
-          move(FORWARD_SPEED, BOX_DIMENSION);    
+        while (detect_wall() == 0 || robot.posY > END_ROW) {
+          move(FORWARD_SPEED, BOX_DIMENSION); 
+             
+
+        }
     }
 
     /***    Robot is in the second column      ***/
     else if(robot.posX == 1)
     {
 
-      if (detect_wall() == 1 || path[robot.posY - 1][robot.posX] == 1)
+      if (path[robot.posY - 1][robot.posX] == 1)
       {
         if (path[robot.posY][robot.posX - 1] == 0)
         {
           turn(TURN_SPEED, LeftTurn);
-          if(detect_wall() == 1  || path[robot.posY - 1][robot.posX] == 1)
+          if(detect_wall() == 1)
           {
             turn(TURN_SPEED, LeftTurn, 180);
             move(FORWARD_SPEED, BOX_DIMENSION);
