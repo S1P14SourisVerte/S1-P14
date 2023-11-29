@@ -26,7 +26,7 @@ void loop() {
 
   if(robot.posY == 0) {
     active = NO;
-    Serial.println(robot.posY);
+    // Serial.println(robot.posY);
   }
 
   if(active == YES) {

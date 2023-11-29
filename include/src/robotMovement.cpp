@@ -84,8 +84,8 @@ void turn(float motorSpeed, turnDirection direction, float angle = 90.0f)
   while (currentLeftPulses < distance_pulses) {
     
     #ifdef DEBUG
-      Serial.print("pd: ");
-      Serial.println(pulsesDifference);
+      // Serial.print("pd: ");
+      // Serial.println(pulsesDifference);
     #endif
 
     if (pulsesDifference > 0) {
